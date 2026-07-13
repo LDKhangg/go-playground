@@ -1,5 +1,7 @@
 # Go Learning Playground Design
 
+> **Amendment:** This historical design predates the final Chapter 06 workflow decision. Chapter 06 is the sole exception to universal prewritten challenge tests: the learner authors the test suite, so there is no prewritten failing test or meta-test, and its acceptance criteria are checked manually. The current authoritative workflow is in the [root README](../../../README.md), [exercise guide](../../../exercises/README.md), and [Chapter 06 README](../../../exercises/06-testing/README.md).
+
 ## Purpose
 
 Turn the existing task API into a public, beginner-friendly Go learning repository. The repository should combine guided exercises with one application that grows as the learner gains new skills. It should also make every completed lesson easy to preserve in Git and publish to GitHub.

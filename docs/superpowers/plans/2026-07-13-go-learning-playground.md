@@ -1,5 +1,7 @@
 # Go Learning Playground Implementation Plan
 
+> **Amendment:** This historical plan predates the final Chapter 06 workflow decision. Chapter 06 is the sole exception to universal prewritten challenge tests: the learner authors the test suite, so there is no prewritten failing test or meta-test, and its acceptance criteria are checked manually. The current authoritative workflow is in the [root README](../../../README.md), [exercise guide](../../../exercises/README.md), and [Chapter 06 README](../../../exercises/06-testing/README.md). Historical task steps below are retained unchanged.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build and publish a polished beginner Go curriculum with test-driven exercises and an evolving task API in one public GitHub repository.
