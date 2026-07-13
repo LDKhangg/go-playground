@@ -23,3 +23,11 @@ func TestDivideRejectsZeroDivisor(t *testing.T) {
 		t.Fatalf("Divide(10, 0) error = %v, want %v", err, ErrDivideByZero)
 	}
 }
+
+func TestDoubleUpdatesPointedValue(t *testing.T) {
+	number := 6
+	Double(&number)
+	if number != 12 {
+		t.Fatalf("number after Double = %d, want 12", number)
+	}
+}

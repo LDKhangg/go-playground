@@ -3,6 +3,7 @@ package httpapi
 import (
 	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
 
 	"github.com/LDKhangg/go-playground/internal/tasks"
@@ -23,7 +24,12 @@ func TasksHandler(store *tasks.Store) http.HandlerFunc {
 			writeJSON(w, http.StatusOK, store.List())
 		case http.MethodPost:
 			var req createTaskRequest
-			if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			decoder := json.NewDecoder(r.Body)
+			if err := decoder.Decode(&req); err != nil {
+				writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid json"})
+				return
+			}
+			if err := decoder.Decode(&struct{}{}); err != io.EOF {
 				writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid json"})
 				return
 			}

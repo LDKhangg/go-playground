@@ -10,7 +10,7 @@ The `testing` package, test tables, `t.Run`, failure messages, coverage, and ben
 
 ## Exercise
 
-In `exercise_test.go`, write `TestClassify` as a table with negative, zero, and positive cases. Add `BenchmarkClassify` that repeatedly calls `Classify(42)` using `b.N`.
+In `exercise_test.go`, write `TestClassify` as a table with `negative`, `zero`, and `positive` named cases. Add `BenchmarkClassify` that repeatedly calls `Classify(42)` using `b.N`. The tagged meta-test checks that both functions and the required structure exist, so an untouched chapter fails with actionable guidance.
 
 ## Acceptance Criteria
 
@@ -21,7 +21,7 @@ In `exercise_test.go`, write `TestClassify` as a table with negative, zero, and 
 
 ## Hints
 
-Keep test cases in a slice of anonymous structs. Call `b.ResetTimer()` immediately before the benchmark loop.
+Keep test cases in a slice of anonymous structs and run each case with `t.Run`. Call `b.ResetTimer()` immediately before the benchmark loop.
 
 ## Commands
 

@@ -26,6 +26,6 @@ Use this journal to explain what changed in your own words. Add one entry for ev
 
 **Problem and solution:** The original project had working code but no ordered curriculum or Git history. The repository now separates exercises from the evolving application and documents one workflow for both.
 
-**Commit:** Add the relevant commit hash after the repository setup is published.
+**Commit:** Repository setup commits `e152f21` through `9ccaa4b`.
 
 **Question to revisit:** How should persistent storage replace the in-memory store without coupling it to HTTP handlers?

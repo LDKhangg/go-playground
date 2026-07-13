@@ -21,13 +21,13 @@ This repository is a beginner learning workspace, not a collection of finished a
 
 | Chapter | Topic | Status | Project connection |
 | --- | --- | --- | --- |
-| 01 | Basics | Not started | Read task fields and HTTP status values |
-| 02 | Functions | Not started | Trace constructors and handlers |
-| 03 | Collections | Not started | Understand task slices and copies |
-| 04 | Structs and methods | Not started | Extend the task domain |
-| 05 | Interfaces and errors | Not started | Add validation and storage boundaries |
-| 06 | Testing | Not started | Expand API characterization tests |
-| 07 | Concurrency | Not started | Understand mutexes and cancellation |
+| [01](exercises/01-basics) | Basics | Not started | [Read the current task API](#task-api) |
+| [02](exercises/02-functions) | Functions | Not started | [Trace the current task API](#task-api) |
+| [03](exercises/03-collections) | Collections | Not started | [Inspect the current in-memory store](#task-api) |
+| [04](exercises/04-structs-methods) | Structs and methods | Not started | [Extend CRUD and domain validation](ROADMAP.md#task-api-milestones) |
+| [05](exercises/05-interfaces-errors) | Interfaces and errors | Not started | [Introduce a persistence boundary](ROADMAP.md#task-api-milestones) |
+| [06](exercises/06-testing) | Testing | Not started | [Expand handler coverage](ROADMAP.md#task-api-milestones) |
+| [07](exercises/07-concurrency) | Concurrency | Not started | [Add context and graceful shutdown](ROADMAP.md#task-api-milestones) |
 
 See [`ROADMAP.md`](ROADMAP.md) for later API, persistence, observability, and deployment milestones.
 

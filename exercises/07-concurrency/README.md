@@ -2,25 +2,27 @@
 
 ## Goal
 
-Make shared mutable state safe when many goroutines use it.
+Make shared mutable state safe, receive values through a channel, and stop work through context cancellation.
 
 ## Concepts
 
-Goroutines, wait groups, mutexes, critical sections, and the race detector.
+Goroutines, channels, wait groups, mutexes, critical sections, `context.Context`, cancellation, and the race detector.
 
 ## Exercise
 
-Make `Counter` safe and correct when 100 goroutines increment it concurrently. Both `Increment` and `Value` must synchronize access to `value`.
+Make `Counter` safe while one goroutine increments it and another reads it. Both `Increment` and `Value` must synchronize access to `value`. Implement `Sum` so it receives and totals channel values until the channel closes, or returns the context error when cancellation wins.
 
 ## Acceptance Criteria
 
-- The final value is exactly 100.
+- The final counter value is exactly 1000.
 - `go test -race` reports no data race.
 - The counter uses `sync.Mutex` or `sync.RWMutex`, not sleeps or timing assumptions.
+- `Sum` returns `12` for a channel containing `2`, `4`, and `6`.
+- `Sum` returns `context.Canceled` when called with an already canceled context.
 
 ## Hints
 
-Put the lock inside `Counter` beside the state it protects. Keep each critical section small and use `defer` when it makes unlocking easier to verify.
+Put the lock inside `Counter` beside the state it protects, and lock reads as well as writes. In `Sum`, use `select` to wait for either `ctx.Done()` or a value and its open/closed status from the channel.
 
 ## Commands
 
@@ -28,4 +30,4 @@ Put the lock inside `Counter` beside the state it protects. Keep each critical s
 
 ## Reflection Prompts
 
-Why does the wait group not protect the counter itself? What behavior does the race detector find that a normal assertion may miss?
+Why must `Value` lock even though it only reads? How does selecting on `ctx.Done()` keep channel work cancelable?

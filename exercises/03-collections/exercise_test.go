@@ -29,3 +29,10 @@ func TestUniqueWordsDoesNotReuseInputStorage(t *testing.T) {
 		t.Fatalf("UniqueWords modified or reused input storage: input = %v", input)
 	}
 }
+
+func TestSumArray(t *testing.T) {
+	numbers := [4]int{2, 4, 6, 8}
+	if got := SumArray(numbers); got != 20 {
+		t.Fatalf("SumArray(%v) = %d, want 20", numbers, got)
+	}
+}

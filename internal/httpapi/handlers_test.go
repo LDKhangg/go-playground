@@ -60,6 +60,8 @@ func TestTasksHandlerRejectsInvalidRequests(t *testing.T) {
 		want string
 	}{
 		{name: "invalid JSON", body: `{`, want: "{\"error\":\"invalid json\"}\n"},
+		{name: "trailing malformed JSON", body: `{"title":"learn handlers"}{`, want: "{\"error\":\"invalid json\"}\n"},
+		{name: "multiple JSON values", body: `{"title":"learn handlers"}{"title":"ignored"}`, want: "{\"error\":\"invalid json\"}\n"},
 		{name: "empty title", body: `{"title":"   "}`, want: "{\"error\":\"title must not be empty\"}\n"},
 	}
 
