@@ -1,0 +1,18 @@
+# Build output
+/go-playground
+/bin/
+*.test
+*.out
+
+# Local configuration
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+
+# Serena local state
+.serena/
