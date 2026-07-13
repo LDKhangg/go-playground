@@ -10,7 +10,9 @@ The `testing` package, test tables, `t.Run`, failure messages, coverage, and ben
 
 ## Exercise
 
-In `exercise_test.go`, write `TestClassify` as a table with `negative`, `zero`, and `positive` named cases. Add `BenchmarkClassify` that repeatedly calls `Classify(42)` using `b.N`. The tagged meta-test checks that both functions and the required structure exist, so an untouched chapter fails with actionable guidance.
+In `exercise_test.go`, write `TestClassify` as a table with `negative`, `zero`, and `positive` named cases. Add `BenchmarkClassify` that repeatedly calls `Classify(42)` using `b.N`.
+
+This chapter is the intentional workflow exception: you are writing the tests, so no prewritten challenge test fails before you begin. The initial tagged commands succeed without running a test or benchmark. Assess your work against every acceptance criterion below.
 
 ## Acceptance Criteria
 

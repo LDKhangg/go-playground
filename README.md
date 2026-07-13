@@ -6,7 +6,7 @@
 [![CI](https://github.com/LDKhangg/go-playground/actions/workflows/ci.yml/badge.svg)](https://github.com/LDKhangg/go-playground/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-2f855a.svg)](LICENSE)
 
-This repository is a beginner learning workspace, not a collection of finished answers. Each chapter gives you a goal, starter code, hints, and opt-in tests. The task API grows alongside the exercises so each concept is used in a real program.
+This repository is a beginner learning workspace, not a collection of finished answers. Each chapter gives you a goal, starter code, and hints. Most chapters provide opt-in challenge tests; Chapter 06 teaches testing by asking you to author them. The task API grows alongside the exercises so each concept is used in a real program.
 
 ## Start Here
 
@@ -95,7 +95,8 @@ docs/              Learning log, design, and plans
 ## Learning Rules
 
 - Read the goal before reading the tests.
-- Run a challenge test before changing starter code.
+- For Chapters 01-05 and 07, run the challenge test before changing starter code.
+- For Chapter 06, author tests in the tagged starter and check every documented acceptance criterion; no prewritten failure is provided.
 - Prefer the smallest code that makes the test pass.
 - Explain failures in your own words in the learning log.
 - Make one coherent learning commit at a time.
