@@ -1,9 +1,18 @@
 package basics
 
 func TicketPrice(age int) int {
-	return 0
+	if age < 13 {
+		return 5
+	} else if age < 65 {
+		return 12
+	}
+	return 7
 }
 
 func TotalTicketPrice(ages []int) int {
-	return 0
+	total := 0
+	for _, age := range ages {
+		total += TicketPrice(age)
+	}
+	return total
 }
