@@ -12,6 +12,16 @@ Each chapter contains starter code and a lesson. Chapters 01-05 and 07 include c
 
 For Chapter 06, use its README acceptance criteria to assess the table-driven test, subtests, diagnostics, coverage, and benchmark. There is no prewritten meta-test.
 
+## Reading Diagnostics
+
+A compiler or type error means Go cannot build the package and must be fixed before tests can run. A static-analysis warning is a suggestion about code quality; it is not a syntax error. This repository also uses the `exercise` build tag: a tagged test is intentionally excluded unless you run:
+
+```bash
+go test -tags exercise ./exercises/<chapter>/...
+```
+
+When an unfinished starter test fails, it is reporting an acceptance criterion you have not implemented yet. It is different from an invalid Go program. If an editor says a tagged test has no package metadata, open the repository as a Go workspace with the `exercise` build tag enabled, or run the command above in a terminal.
+
 ## Finish a Chapter
 
 1. Remove the `//go:build exercise` line and the blank line below it from the chapter test.
