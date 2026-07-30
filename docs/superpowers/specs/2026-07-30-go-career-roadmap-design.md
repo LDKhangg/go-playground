@@ -5,7 +5,7 @@
 Turn this repository into one progressive, career-oriented Go learning path:
 
 ```text
-syntax -> exercises -> core engineering -> Task Manager app -> deployment
+syntax -> exercises -> core engineering -> endpoints -> Go applications -> deployment
 ```
 
 The repository will continue to teach syntax through the existing exercises,
@@ -60,21 +60,45 @@ Move the existing Task API out of repository root to `apps/task-manager/` and
 grow it through explicit milestones. A learner builds one recognizable
 application while each stage adds only one new concern.
 
-1. CLI: create, list, and complete tasks using the standard library.
-2. HTTP: expose the existing health and task endpoints using `net/http`.
-3. Concurrency: add bounded background work, cancellation, and graceful
+1. HTTP: expose the existing health and task endpoints using `net/http`.
+2. Concurrency: add bounded background work, cancellation, and graceful
    shutdown; verify with `go test -race`.
-4. Operations: add structured logs and environment-based configuration.
-5. Persistence: replace the in-memory store through a repository interface
+3. Operations: add structured logs and environment-based configuration.
+4. Persistence: replace the in-memory store through a repository interface
    while preserving handler behavior.
-6. Protobuf and gRPC: define versioned messages and service methods in a
+5. Protobuf and gRPC: define versioned messages and service methods in a
    `.proto` contract, generate Go code, and expose a gRPC transport alongside
    the HTTP API.
-7. Delivery: containerize the app, run quality checks in CI, and document a
+6. Delivery: containerize the app, run quality checks in CI, and document a
    local deployment path.
 
 The first implementation plan covers the roadmap and directory reorganization
 only. It must not prematurely implement all of these application milestones.
+
+### Phase 4: Go Applications Beyond Endpoints
+
+After learners can build and test HTTP endpoints, the roadmap must explicitly
+show two non-API application paths where Go is a strong fit.
+
+1. CLI and terminal application: build a `task` command that creates, lists,
+   completes, and filters tasks. It starts with standard input/output and
+   command-line flags, then may add a terminal UI after the CLI workflow is
+   stable. This teaches executable packaging, input validation, exit codes,
+   user-facing errors, and reuse of application logic without HTTP.
+2. Long-running worker application: build a `task-worker` process that claims
+   bounded background work, observes `context.Context` cancellation, reports
+   structured progress, and exits gracefully. This teaches goroutines,
+   channels, worker-pool limits, scheduling, and operational behavior without
+   making the learner write another CRUD API.
+
+Both programs share Task Manager domain and application behavior rather than
+duplicating task rules or storage access. The CLI may call the application
+layer directly at first; a later optional integration milestone may make it an
+HTTP or gRPC client.
+
+Desktop and mobile GUI development are valid Go-adjacent paths but are not
+core curriculum milestones: they require a separate UI toolkit and would
+dilute the backend, tooling, and systems strengths this repository teaches.
 
 ## Repository Layout
 
@@ -85,7 +109,7 @@ The target top-level layout is:
 ├── exercises/                 # Chapters 01-07 and syntax-focused exercises
 ├── apps/
 │   └── task-manager/          # Evolving capstone application
-│       ├── cmd/               # Executable entry points, introduced by milestones
+│       ├── cmd/               # api, task CLI, and worker entry points as introduced
 │       ├── internal/          # Application-only packages
 │       ├── api/               # HTTP and later protobuf/gRPC contracts
 │       └── README.md          # Milestone guide and prerequisites
@@ -121,6 +145,7 @@ directories are added in advance.
 - state the current milestone and commands that work today;
 - list completed and upcoming milestones without implying unfinished features
   are implemented;
+- document the API, CLI, and worker programs separately as each is introduced;
 - document each transport separately when HTTP and gRPC coexist;
 - provide tool prerequisites only at the protobuf milestone.
 
@@ -180,6 +205,7 @@ This design does not:
 - replace the standard library HTTP implementation with a framework now;
 - add a database, Docker image, gRPC dependency, protobuf generated code, or
   deployment configuration now;
+- add desktop or mobile GUI dependencies;
 - provide exercise answer files;
 - change the public behavior of the current Task HTTP API during its move.
 
