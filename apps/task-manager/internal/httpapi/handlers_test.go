@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/LDKhangg/go-playground/internal/tasks"
+	"github.com/LDKhangg/go-playground/apps/task-manager/internal/tasks"
 )
 
 func TestHealthHandler(t *testing.T) {

@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/LDKhangg/go-playground/internal/tasks"
+	"github.com/LDKhangg/go-playground/apps/task-manager/internal/tasks"
 )
 
 type createTaskRequest struct {

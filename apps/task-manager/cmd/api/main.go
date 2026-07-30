@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/LDKhangg/go-playground/internal/httpapi"
-	"github.com/LDKhangg/go-playground/internal/tasks"
+	"github.com/LDKhangg/go-playground/apps/task-manager/internal/httpapi"
+	"github.com/LDKhangg/go-playground/apps/task-manager/internal/tasks"
 )
 
 func main() {
