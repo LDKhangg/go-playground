@@ -31,6 +31,10 @@ This repository is a beginner learning workspace, not a collection of finished a
 
 See [`ROADMAP.md`](ROADMAP.md) for later API, persistence, observability, and deployment milestones.
 
+## Chapter Format
+
+Each chapter README is a complete lesson: **Goal**, **Concepts**, **Syntax Primer**, **Mental Model**, **Annotated Examples**, **Common Diagnostics**, **Exercise**, **Acceptance Criteria**, **Hints**, **Verify**, and **Reflection Prompts**. The examples explain Go syntax, but this repository does not include completed exercise solutions.
+
 ## Daily Workflow
 
 ```bash
@@ -44,6 +48,8 @@ git push
 ```
 
 When a chapter is complete, remove `//go:build exercise` from its challenge test so `go test ./...` includes it from then on. Update the status table and learning log in the same commit.
+
+`go test ./...` is the baseline check: it deliberately excludes unfinished challenge tests. While you are working through a chapter, run `go test -tags exercise ./exercises/<chapter>/...` to include its challenge test. Read the [exercise guide](exercises/README.md) for why this build tag exists and how to read its diagnostics.
 
 ## Task API
 
