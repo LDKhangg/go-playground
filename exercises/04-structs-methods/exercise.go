@@ -10,21 +10,29 @@ type Project struct {
 }
 
 func NewTask(title string) Task {
-	return Task{}
+	return Task{
+		title: title,
+	}
 }
 
-func (t *Task) Complete() {}
+func (t *Task) Complete() {
+	t.completed = true
+}
 
 func (t Task) IsComplete() bool {
-	return false
+	return t.completed
 }
 
 func NewProject(currentTitle string) Project {
-	return Project{}
+	return Project{
+		current: NewTask(currentTitle),
+	}
 }
 
-func (p *Project) CompleteCurrent() {}
+func (p *Project) CompleteCurrent() {
+	p.current.Complete()
+}
 
 func (p Project) IsCurrentComplete() bool {
-	return false
+	return p.current.IsComplete()
 }
