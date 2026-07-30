@@ -2,30 +2,92 @@
 
 ## Goal
 
-Work with arrays and `range`, then use a map and slice together to remove duplicates without losing order.
+Use arrays, slices, maps, and `range` to process a sequence while preserving the order in which values first appeared.
 
 ## Concepts
 
-Arrays, slices, maps, `range`, `append`, zero values, and independent backing storage.
+- Arrays have a fixed length as part of their type.
+- Slices describe a variable-length window over an underlying array.
+- Maps associate a key with a value and are useful as sets.
+- `range` visits elements in a collection.
+- `append` grows a slice and may allocate a new backing array.
+
+## Syntax Primer
+
+```go
+numbers := [4]int{2, 4, 6, 8}
+words := []string{"go", "maps", "go"}
+seen := make(map[string]bool)
+
+for index, word := range words {
+	_ = index
+	seen[word] = true
+}
+```
+
+`[4]int` and `[]int` are different types: the first always has four elements; the second can grow or shrink. Looking up a missing `bool` key in a map returns `false`, which makes `map[string]bool` convenient for recording whether a word was seen.
+
+## Mental Model
+
+An array is a box with a fixed number of slots. A slice is a small descriptor pointing at a portion of an array. A map is a lookup table, not an ordered list. Use the input slice to decide order, and use the map only to remember membership.
+
+## Annotated Examples
+
+```go
+func countNonEmpty(words []string) int {
+	count := 0
+	for _, word := range words { // `_` discards the index.
+		if word != "" {
+			count++
+		}
+	}
+	return count
+}
+```
+
+```go
+func copyNames(names []string) []string {
+	result := make([]string, 0, len(names)) // New backing storage.
+	for _, name := range names {
+		result = append(result, name)
+	}
+	return result
+}
+```
+
+## Common Diagnostics
+
+- `cannot use []int as [4]int`: a slice and a fixed-size array are distinct types.
+- `assignment to entry in nil map`: initialize a map with `make` or a map literal before writing to it.
+- Unexpected ordering after ranging over a map: Go intentionally does not guarantee map iteration order.
+- A changed input slice after returning a result: the result reused the input backing array instead of allocating its own storage.
 
 ## Exercise
 
-Implement `SumArray` by ranging over its fixed-size array. Implement `UniqueWords` by keeping only each word's first occurrence and returning a newly allocated result slice.
+Implement `SumArray` by visiting every value in its `[4]int` argument. Implement `UniqueWords` so it returns each word's first occurrence, keeps input order, and returns independent storage rather than filtering in place.
 
 ## Acceptance Criteria
 
 - `SumArray([4]int{2, 4, 6, 8})` returns `20`.
-- `go test go maps test` becomes `go test maps` in that order.
-- Mutating the returned slice does not change the input slice.
+- `UniqueWords([]string{"go", "test", "go", "maps", "test"})` returns `[]string{"go", "test", "maps"}`.
+- Mutating the returned slice does not mutate the input slice.
 
 ## Hints
 
-Use `range` to visit array values. For unique words, use a map as a set and append unseen words to a result slice. Do not filter by overwriting the input.
+- Start a total at its zero value, then add each array value.
+- Use `seen[word]` to decide whether to append a word.
+- Allocate a separate result slice. Do not overwrite `words` while iterating.
 
-## Commands
+## Verify
 
-`go test -tags exercise ./exercises/03-collections/...`
+Run:
+
+```bash
+go test -tags exercise ./exercises/03-collections/...
+```
 
 ## Reflection Prompts
 
-How does an array's length differ from a slice's length? Why does iterating over the map lose input order?
+- Why does an array's length belong to its type while a slice length does not?
+- Why does a map help detect duplicates but not preserve their original order?
+- When might sharing a backing array be useful, and when is it risky?
