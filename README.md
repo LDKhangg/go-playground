@@ -25,8 +25,8 @@ transport.
 
 1. **Foundations**: learn variables, control flow, functions, collections, and
    tests through short syntax exercises.
-2. **Exercises**: use structs, methods, interfaces, errors, and concurrency in
-   increasingly realistic starter code.
+2. **Exercises**: use structs, methods, interfaces, object-oriented design,
+   errors, and concurrency in increasingly realistic starter code.
 3. **Core Go engineering**: practice package boundaries, table-driven tests,
    formatting, `go vet`, the race detector, and `context`.
 4. **HTTP endpoints**: run the Task Manager's health, list, and create routes.
@@ -51,6 +51,7 @@ The complete sequence is in [`ROADMAP.md`](ROADMAP.md).
 | [05](exercises/05-interfaces-errors) | Interfaces and errors | Introduce a persistence boundary. |
 | [06](exercises/06-testing) | Testing | Expand handler and worker coverage. |
 | [07](exercises/07-concurrency) | Concurrency | Build worker pools, cancellation, graceful shutdown, and race-safe code. |
+| [08](exercises/08-object-oriented-design) | Object-oriented design | Practice Go-style services, composition, and dependency injection before expanding the API. |
 
 Each chapter README contains **Goal**, **Concepts**, **Syntax Primer**, **Mental
 Model**, **Annotated Examples**, **Common Diagnostics**, **Exercise**,
@@ -122,7 +123,7 @@ docs/                      Learning log, design, and plans
 ## Learning Rules
 
 - Read the goal before reading the tests.
-- For Chapters 01-05 and 07, run the challenge test before changing starter code.
+- For Chapters 01-05, 07, and 08, run the challenge test before changing starter code.
 - For Chapter 06, author tests in the tagged starter and check every documented acceptance criterion.
 - Prefer the smallest code that makes the test pass.
 - Explain failures in your own words in the learning log.

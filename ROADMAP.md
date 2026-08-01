@@ -12,6 +12,7 @@ then applies that idea in a program that becomes progressively more realistic.
 - [ ] 05 Interfaces and errors: small interfaces, sentinel errors, wrapping, and inspection.
 - [ ] 06 Testing: table-driven tests, subtests, coverage, and benchmarks.
 - [ ] 07 Concurrency: goroutines, wait groups, mutexes, contexts, and race detection.
+- [ ] 08 Object-oriented design: structs plus behavior, composition, dependency injection, and service boundaries.
 
 Run a chapter's opt-in challenge with:
 
@@ -19,7 +20,7 @@ Run a chapter's opt-in challenge with:
 go test -tags exercise ./exercises/<chapter>/...
 ```
 
-Starter failures in Chapters 04, 05, and 07 are unmet acceptance criteria, not
+Starter failures in Chapters 04, 05, 07, and 08 are unmet acceptance criteria, not
 syntax errors. `go test ./...` deliberately excludes these unfinished tagged
 tests from the baseline.
 

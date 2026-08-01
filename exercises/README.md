@@ -1,11 +1,11 @@
 # Exercise Guide
 
-Each drill or chapter contains starter code and a lesson. The new `00-syntax-drills` track isolates one syntax idea at a time before the broader chapters. Chapters 01-05 and 07 include challenge tests without solutions. In Chapter 06, writing the tests is the exercise, so its tagged `exercise_test.go` starts empty.
+Each drill or chapter contains starter code and a lesson. The new `00-syntax-drills` track isolates one syntax idea at a time before the broader chapters. Chapters 01-05, 07, and 08 include challenge tests without solutions. In Chapter 06, writing the tests is the exercise, so its tagged `exercise_test.go` starts empty.
 
 ## Start a Chapter
 
 1. Read the drill or chapter README.
-2. Run `go test -tags exercise ./exercises/<path>/...`. Syntax drills and Chapters 01-05 and 07 fail on an unmet requirement; Chapter 06 intentionally succeeds without tests until you author them.
+2. Run `go test -tags exercise ./exercises/<path>/...`. Syntax drills and Chapters 01-05, 07, and 08 fail on an unmet requirement; Chapter 06 intentionally succeeds without tests until you author them.
 3. Implement one acceptance criterion at a time.
 4. Format and rerun the tagged test.
 5. Run `make check` to protect previously completed work.
@@ -40,6 +40,7 @@ When an unfinished starter test fails, it is reporting an acceptance criterion y
 6. [Interfaces and errors](05-interfaces-errors)
 7. [Testing](06-testing)
 8. [Concurrency](07-concurrency)
+9. [Object-oriented design](08-object-oriented-design)
 
 ## Chapters
 
@@ -51,3 +52,4 @@ When an unfinished starter test fails, it is reporting an acceptance criterion y
 6. [Interfaces and errors](05-interfaces-errors)
 7. [Testing](06-testing)
 8. [Concurrency](07-concurrency)
+9. [Object-oriented design](08-object-oriented-design)
