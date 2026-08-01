@@ -18,7 +18,7 @@ transport.
 2. Clone the repository and enter it.
 3. Run `make check` to verify the baseline.
 4. Read [`exercises/README.md`](exercises/README.md).
-5. Begin with [`exercises/01-basics`](exercises/01-basics).
+5. Begin with [`exercises/00-syntax-drills`](exercises/00-syntax-drills).
 6. Record completed work in [`docs/learning-log.md`](docs/learning-log.md) and commit it.
 
 ## Career Learning Path
@@ -43,6 +43,7 @@ The complete sequence is in [`ROADMAP.md`](ROADMAP.md).
 
 | Chapter | Topic | Project connection |
 | --- | --- | --- |
+| [00](exercises/00-syntax-drills) | Syntax drills | Practice one Go idea at a time before larger exercises. |
 | [01](exercises/01-basics) | Basics | Read values returned by the Task Manager. |
 | [02](exercises/02-functions) | Functions | Trace handler and store function calls. |
 | [03](exercises/03-collections) | Collections | Inspect the in-memory task list. |
@@ -98,6 +99,7 @@ moving to protobuf/gRPC and delivery work.
 
 | Command | Purpose |
 | --- | --- |
+| `make drills` | Run the opt-in syntax drill challenge tests. |
 | `make run-api` | Start the Task Manager API on port 8080. |
 | `make run` | Alias for `make run-api`. |
 | `make fmt` | Format all Go code. |
@@ -109,7 +111,7 @@ moving to protobuf/gRPC and delivery work.
 ## Repository Map
 
 ```text
-exercises/                 Guided, solution-free syntax chapters
+exercises/                 Guided, solution-free drills and chapters
 apps/task-manager/         Evolving capstone application
 apps/task-manager/cmd/api/ HTTP executable
 apps/task-manager/internal/ HTTP and task domain packages
