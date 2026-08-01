@@ -1,11 +1,14 @@
 GO_FILES := $(shell find . -type f -name '*.go' -not -path './.git/*')
 
-.PHONY: run run-api drills fmt fmt-check test race vet check
+.PHONY: run run-api test-api drills fmt fmt-check test race vet check
 
 run: run-api
 
 run-api:
 	go run ./apps/task-manager/cmd/api
+
+test-api:
+	go test ./apps/task-manager/...
 
 drills:
 	go test -tags exercise ./exercises/00-syntax-drills/...

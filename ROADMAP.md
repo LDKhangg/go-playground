@@ -44,9 +44,10 @@ The capstone source is in [`apps/task-manager/`](apps/task-manager/).
 - [x] Health endpoint.
 - [x] List tasks endpoint.
 - [x] Create task endpoint with JSON validation.
-- [ ] Add complete CRUD operations and domain validation.
-- [ ] Expand handler coverage with `httptest`.
-- [ ] Add configuration, request contexts, and graceful HTTP shutdown.
+- [x] Add complete CRUD operations and domain validation.
+- [x] Expand handler coverage with `httptest`.
+- [x] Add `PORT` configuration and graceful HTTP shutdown.
+- [ ] Propagate request contexts through longer-running application work.
 
 Run and verify the current milestone:
 
@@ -54,6 +55,7 @@ Run and verify the current milestone:
 make run-api
 curl http://localhost:8080/health
 curl http://localhost:8080/tasks
+curl -X PATCH http://localhost:8080/tasks/1 -H 'Content-Type: application/json' -d '{"done":true}'
 ```
 
 ## Phase 4: Go Applications Beyond Endpoints

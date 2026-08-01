@@ -29,7 +29,7 @@ transport.
    errors, and concurrency in increasingly realistic starter code.
 3. **Core Go engineering**: practice package boundaries, table-driven tests,
    formatting, `go vet`, the race detector, and `context`.
-4. **HTTP endpoints**: run the Task Manager's health, list, and create routes.
+4. **HTTP endpoints**: build the Task Manager's CRUD routes, validation, and graceful shutdown behavior.
 5. **Go applications**: build a `task` CLI and a `task-worker` long-running
    process for automation and background work.
 6. **Transport and persistence**: add storage, then define protobuf contracts
@@ -71,7 +71,9 @@ and how to interpret its diagnostics.
 ## Task Manager Capstone
 
 The current Task Manager milestone is a standard-library HTTP API backed by an
-in-memory, concurrency-safe store. Its source and guide are in
+in-memory, concurrency-safe store. It now supports health checks, collection
+reads/writes, item reads/updates/deletes, strict JSON validation, and graceful
+shutdown. Its source and guide are in
 [`apps/task-manager/`](apps/task-manager/).
 
 ```text
@@ -90,6 +92,9 @@ curl http://localhost:8080/tasks
 curl -X POST http://localhost:8080/tasks \
   -H 'Content-Type: application/json' \
   -d '{"title":"learn Go"}'
+curl -X PATCH http://localhost:8080/tasks/1 \
+  -H 'Content-Type: application/json' \
+  -d '{"done":true}'
 ```
 
 Go is not only for HTTP services. The later capstone milestones use the same
@@ -101,8 +106,9 @@ moving to protobuf/gRPC and delivery work.
 | Command | Purpose |
 | --- | --- |
 | `make drills` | Run the opt-in syntax drill challenge tests. |
-| `make run-api` | Start the Task Manager API on port 8080. |
+| `make run-api` | Start the Task Manager API on port 8080 or `$PORT`. |
 | `make run` | Alias for `make run-api`. |
+| `make test-api` | Run the Task Manager package tests only. |
 | `make fmt` | Format all Go code. |
 | `make test` | Run baseline tests. |
 | `make race` | Run tests with the race detector. |

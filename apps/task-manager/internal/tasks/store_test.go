@@ -47,6 +47,96 @@ func TestStoreListReturnsCopy(t *testing.T) {
 	}
 }
 
+func TestStoreGetReturnsTaskByID(t *testing.T) {
+	store := NewStore()
+	task, err := store.Add("learn handlers")
+	if err != nil {
+		t.Fatalf("Add returned error: %v", err)
+	}
+
+	got, err := store.Get(task.ID)
+	if err != nil {
+		t.Fatalf("Get returned error: %v", err)
+	}
+
+	if got != task {
+		t.Fatalf("Get returned %+v, want %+v", got, task)
+	}
+}
+
+func TestStoreGetReturnsNotFound(t *testing.T) {
+	store := NewStore()
+
+	_, err := store.Get(99)
+	if err != ErrTaskNotFound {
+		t.Fatalf("expected ErrTaskNotFound, got %v", err)
+	}
+}
+
+func TestStoreUpdateChangesTitleAndDone(t *testing.T) {
+	store := NewStore()
+	task, err := store.Add("learn handlers")
+	if err != nil {
+		t.Fatalf("Add returned error: %v", err)
+	}
+
+	newTitle := "ship handlers"
+	done := true
+	updated, err := store.Update(task.ID, &newTitle, &done)
+	if err != nil {
+		t.Fatalf("Update returned error: %v", err)
+	}
+
+	if updated.Title != newTitle {
+		t.Fatalf("expected updated title %q, got %q", newTitle, updated.Title)
+	}
+	if !updated.Done {
+		t.Fatalf("expected task to be marked done")
+	}
+
+	again, err := store.Get(task.ID)
+	if err != nil {
+		t.Fatalf("Get returned error: %v", err)
+	}
+	if again != updated {
+		t.Fatalf("store persisted %+v, want %+v", again, updated)
+	}
+}
+
+func TestStoreUpdateRejectsEmptyTitle(t *testing.T) {
+	store := NewStore()
+	task, err := store.Add("learn handlers")
+	if err != nil {
+		t.Fatalf("Add returned error: %v", err)
+	}
+
+	empty := "   "
+	_, err = store.Update(task.ID, &empty, nil)
+	if err != ErrEmptyTitle {
+		t.Fatalf("expected ErrEmptyTitle, got %v", err)
+	}
+}
+
+func TestStoreDeleteRemovesTask(t *testing.T) {
+	store := NewStore()
+	task, err := store.Add("learn handlers")
+	if err != nil {
+		t.Fatalf("Add returned error: %v", err)
+	}
+
+	if err := store.Delete(task.ID); err != nil {
+		t.Fatalf("Delete returned error: %v", err)
+	}
+
+	if _, err := store.Get(task.ID); err != ErrTaskNotFound {
+		t.Fatalf("expected ErrTaskNotFound after delete, got %v", err)
+	}
+
+	if len(store.List()) != 0 {
+		t.Fatalf("expected empty store after delete")
+	}
+}
+
 func TestStoreSupportsConcurrentAddAndList(t *testing.T) {
 	const additions = 100
 
