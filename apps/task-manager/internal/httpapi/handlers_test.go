@@ -1,11 +1,13 @@
 package httpapi
 
 import (
+	"context"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
+	"github.com/LDKhangg/go-playground/apps/task-manager/internal/taskapp"
 	"github.com/LDKhangg/go-playground/apps/task-manager/internal/tasks"
 )
 
@@ -29,7 +31,7 @@ func TestTasksHandlerListsEmptyStoreAsArray(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(http.MethodGet, "/tasks", nil)
 
-	TasksHandler(tasks.NewStore())(recorder, request)
+	TasksHandler(taskapp.NewService(tasks.NewStore()))(recorder, request)
 
 	if recorder.Code != http.StatusOK {
 		t.Fatalf("expected status %d, got %d", http.StatusOK, recorder.Code)
@@ -43,7 +45,7 @@ func TestTasksHandlerCreatesTask(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(http.MethodPost, "/tasks", strings.NewReader(`{"title":"  learn handlers  "}`))
 
-	TasksHandler(tasks.NewStore())(recorder, request)
+	TasksHandler(taskapp.NewService(tasks.NewStore()))(recorder, request)
 
 	if recorder.Code != http.StatusCreated {
 		t.Fatalf("expected status %d, got %d", http.StatusCreated, recorder.Code)
@@ -55,6 +57,7 @@ func TestTasksHandlerCreatesTask(t *testing.T) {
 
 func TestTaskByIDHandlerGetsTask(t *testing.T) {
 	store := tasks.NewStore()
+	service := taskapp.NewService(store)
 	if _, err := store.Add("learn handlers"); err != nil {
 		t.Fatalf("Add returned error: %v", err)
 	}
@@ -62,7 +65,7 @@ func TestTaskByIDHandlerGetsTask(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(http.MethodGet, "/tasks/1", nil)
 
-	TaskByIDHandler(store)(recorder, request)
+	TaskByIDHandler(service)(recorder, request)
 
 	if recorder.Code != http.StatusOK {
 		t.Fatalf("expected status %d, got %d", http.StatusOK, recorder.Code)
@@ -74,6 +77,7 @@ func TestTaskByIDHandlerGetsTask(t *testing.T) {
 
 func TestTaskByIDHandlerPatchesTask(t *testing.T) {
 	store := tasks.NewStore()
+	service := taskapp.NewService(store)
 	if _, err := store.Add("learn handlers"); err != nil {
 		t.Fatalf("Add returned error: %v", err)
 	}
@@ -81,7 +85,7 @@ func TestTaskByIDHandlerPatchesTask(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(http.MethodPatch, "/tasks/1", strings.NewReader(`{"title":"ship handlers","done":true}`))
 
-	TaskByIDHandler(store)(recorder, request)
+	TaskByIDHandler(service)(recorder, request)
 
 	if recorder.Code != http.StatusOK {
 		t.Fatalf("expected status %d, got %d", http.StatusOK, recorder.Code)
@@ -93,6 +97,7 @@ func TestTaskByIDHandlerPatchesTask(t *testing.T) {
 
 func TestTaskByIDHandlerDeletesTask(t *testing.T) {
 	store := tasks.NewStore()
+	service := taskapp.NewService(store)
 	if _, err := store.Add("learn handlers"); err != nil {
 		t.Fatalf("Add returned error: %v", err)
 	}
@@ -100,7 +105,7 @@ func TestTaskByIDHandlerDeletesTask(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(http.MethodDelete, "/tasks/1", nil)
 
-	TaskByIDHandler(store)(recorder, request)
+	TaskByIDHandler(service)(recorder, request)
 
 	if recorder.Code != http.StatusNoContent {
 		t.Fatalf("expected status %d, got %d", http.StatusNoContent, recorder.Code)
@@ -127,7 +132,7 @@ func TestTasksHandlerRejectsInvalidRequests(t *testing.T) {
 			recorder := httptest.NewRecorder()
 			request := httptest.NewRequest(http.MethodPost, "/tasks", strings.NewReader(tt.body))
 
-			TasksHandler(tasks.NewStore())(recorder, request)
+			TasksHandler(taskapp.NewService(tasks.NewStore()))(recorder, request)
 
 			if recorder.Code != http.StatusBadRequest {
 				t.Fatalf("expected status %d, got %d", http.StatusBadRequest, recorder.Code)
@@ -141,6 +146,7 @@ func TestTasksHandlerRejectsInvalidRequests(t *testing.T) {
 
 func TestTaskByIDHandlerRejectsInvalidRequests(t *testing.T) {
 	store := tasks.NewStore()
+	service := taskapp.NewService(store)
 	if _, err := store.Add("learn handlers"); err != nil {
 		t.Fatalf("Add returned error: %v", err)
 	}
@@ -166,7 +172,7 @@ func TestTaskByIDHandlerRejectsInvalidRequests(t *testing.T) {
 			recorder := httptest.NewRecorder()
 			request := httptest.NewRequest(tt.method, tt.path, strings.NewReader(tt.body))
 
-			TaskByIDHandler(store)(recorder, request)
+			TaskByIDHandler(service)(recorder, request)
 
 			if recorder.Code != tt.status {
 				t.Fatalf("expected status %d, got %d", tt.status, recorder.Code)
@@ -178,11 +184,42 @@ func TestTaskByIDHandlerRejectsInvalidRequests(t *testing.T) {
 	}
 }
 
+func TestTasksHandlerRejectsInvalidDelayQuery(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	request := httptest.NewRequest(http.MethodGet, "/tasks?delay=soon", nil)
+
+	TasksHandler(taskapp.NewService(tasks.NewStore()))(recorder, request)
+
+	if recorder.Code != http.StatusBadRequest {
+		t.Fatalf("expected status %d, got %d", http.StatusBadRequest, recorder.Code)
+	}
+	if got := recorder.Body.String(); got != "{\"error\":\"invalid delay\"}\n" {
+		t.Fatalf("expected invalid delay error, got %q", got)
+	}
+}
+
+func TestTasksHandlerReturnsRequestTimeoutWhenContextCancelled(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+
+	recorder := httptest.NewRecorder()
+	request := httptest.NewRequest(http.MethodGet, "/tasks?delay=50ms", nil).WithContext(ctx)
+
+	TasksHandler(taskapp.NewService(tasks.NewStore()))(recorder, request)
+
+	if recorder.Code != http.StatusRequestTimeout {
+		t.Fatalf("expected status %d, got %d", http.StatusRequestTimeout, recorder.Code)
+	}
+	if got := recorder.Body.String(); got != "{\"error\":\"context canceled\"}\n" {
+		t.Fatalf("expected context canceled error, got %q", got)
+	}
+}
+
 func TestTasksHandlerRejectsUnsupportedMethod(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(http.MethodDelete, "/tasks", nil)
 
-	TasksHandler(tasks.NewStore())(recorder, request)
+	TasksHandler(taskapp.NewService(tasks.NewStore()))(recorder, request)
 
 	if recorder.Code != http.StatusMethodNotAllowed {
 		t.Fatalf("expected status %d, got %d", http.StatusMethodNotAllowed, recorder.Code)
@@ -196,7 +233,7 @@ func TestTaskByIDHandlerRejectsUnsupportedMethod(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(http.MethodPost, "/tasks/1", nil)
 
-	TaskByIDHandler(tasks.NewStore())(recorder, request)
+	TaskByIDHandler(taskapp.NewService(tasks.NewStore()))(recorder, request)
 
 	if recorder.Code != http.StatusMethodNotAllowed {
 		t.Fatalf("expected status %d, got %d", http.StatusMethodNotAllowed, recorder.Code)

@@ -29,7 +29,7 @@ transport.
    errors, and concurrency in increasingly realistic starter code.
 3. **Core Go engineering**: practice package boundaries, table-driven tests,
    formatting, `go vet`, the race detector, and `context`.
-4. **HTTP endpoints**: build the Task Manager's CRUD routes, validation, and graceful shutdown behavior.
+4. **HTTP endpoints**: build the Task Manager's CRUD routes, validation, request-context propagation, and graceful shutdown behavior.
 5. **Go applications**: build a `task` CLI and a `task-worker` long-running
    process for automation and background work.
 6. **Transport and persistence**: add storage, then define protobuf contracts
@@ -72,8 +72,8 @@ and how to interpret its diagnostics.
 
 The current Task Manager milestone is a standard-library HTTP API backed by an
 in-memory, concurrency-safe store. It now supports health checks, collection
-reads/writes, item reads/updates/deletes, strict JSON validation, and graceful
-shutdown. Its source and guide are in
+reads/writes, item reads/updates/deletes, strict JSON validation,
+context-aware longer-running work, and graceful shutdown. Its source and guide are in
 [`apps/task-manager/`](apps/task-manager/).
 
 ```text
@@ -89,6 +89,7 @@ make run-api
 ```bash
 curl http://localhost:8080/health
 curl http://localhost:8080/tasks
+curl http://localhost:8080/tasks?delay=250ms
 curl -X POST http://localhost:8080/tasks \
   -H 'Content-Type: application/json' \
   -d '{"title":"learn Go"}'

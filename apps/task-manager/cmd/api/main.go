@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/LDKhangg/go-playground/apps/task-manager/internal/taskapp"
 	"github.com/LDKhangg/go-playground/apps/task-manager/internal/tasks"
 )
 
@@ -21,7 +22,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	server := newServer(serverAddress(), newMux(store))
+	service := taskapp.NewService(store)
+	server := newServer(serverAddress(), newMux(service))
 
 	go func() {
 		<-ctx.Done()

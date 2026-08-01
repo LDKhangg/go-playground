@@ -1,13 +1,16 @@
 package httpapi
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"io"
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/LDKhangg/go-playground/apps/task-manager/internal/taskapp"
 	"github.com/LDKhangg/go-playground/apps/task-manager/internal/tasks"
 )
 
@@ -24,11 +27,22 @@ func HealthHandler(w http.ResponseWriter, _ *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
 }
 
-func TasksHandler(store *tasks.Store) http.HandlerFunc {
+func TasksHandler(service *taskapp.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
-			writeJSON(w, http.StatusOK, store.List())
+			delay, err := requestDelay(r)
+			if err != nil {
+				writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid delay"})
+				return
+			}
+
+			list, err := service.List(r.Context(), delay)
+			if err != nil {
+				writeTaskError(w, err)
+				return
+			}
+			writeJSON(w, http.StatusOK, list)
 		case http.MethodPost:
 			var req createTaskRequest
 			if err := decodeJSONBody(r, &req); err != nil {
@@ -36,13 +50,9 @@ func TasksHandler(store *tasks.Store) http.HandlerFunc {
 				return
 			}
 
-			task, err := store.Add(req.Title)
+			task, err := service.Create(r.Context(), req.Title)
 			if err != nil {
-				status := http.StatusInternalServerError
-				if errors.Is(err, tasks.ErrEmptyTitle) {
-					status = http.StatusBadRequest
-				}
-				writeJSON(w, status, map[string]string{"error": err.Error()})
+				writeTaskError(w, err)
 				return
 			}
 
@@ -54,7 +64,7 @@ func TasksHandler(store *tasks.Store) http.HandlerFunc {
 	}
 }
 
-func TaskByIDHandler(store *tasks.Store) http.HandlerFunc {
+func TaskByIDHandler(service *taskapp.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id, err := taskIDFromPath(r.URL.Path)
 		if err != nil {
@@ -64,7 +74,7 @@ func TaskByIDHandler(store *tasks.Store) http.HandlerFunc {
 
 		switch r.Method {
 		case http.MethodGet:
-			task, err := store.Get(id)
+			task, err := service.Get(r.Context(), id)
 			if err != nil {
 				writeTaskError(w, err)
 				return
@@ -81,14 +91,14 @@ func TaskByIDHandler(store *tasks.Store) http.HandlerFunc {
 				return
 			}
 
-			task, err := store.Update(id, req.Title, req.Done)
+			task, err := service.Update(r.Context(), id, req.Title, req.Done)
 			if err != nil {
 				writeTaskError(w, err)
 				return
 			}
 			writeJSON(w, http.StatusOK, task)
 		case http.MethodDelete:
-			if err := store.Delete(id); err != nil {
+			if err := service.Delete(r.Context(), id); err != nil {
 				writeTaskError(w, err)
 				return
 			}
@@ -98,6 +108,15 @@ func TaskByIDHandler(store *tasks.Store) http.HandlerFunc {
 			writeJSON(w, http.StatusMethodNotAllowed, map[string]string{"error": "method not allowed"})
 		}
 	}
+}
+
+func requestDelay(r *http.Request) (time.Duration, error) {
+	raw := r.URL.Query().Get("delay")
+	if raw == "" {
+		return 0, nil
+	}
+
+	return time.ParseDuration(raw)
 }
 
 func decodeJSONBody(r *http.Request, dst any) error {
@@ -128,6 +147,8 @@ func taskIDFromPath(path string) (int, error) {
 func writeTaskError(w http.ResponseWriter, err error) {
 	status := http.StatusInternalServerError
 	switch {
+	case errors.Is(err, context.Canceled), errors.Is(err, context.DeadlineExceeded):
+		status = http.StatusRequestTimeout
 	case errors.Is(err, tasks.ErrEmptyTitle):
 		status = http.StatusBadRequest
 	case errors.Is(err, tasks.ErrTaskNotFound):

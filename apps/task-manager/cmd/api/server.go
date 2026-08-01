@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/LDKhangg/go-playground/apps/task-manager/internal/httpapi"
-	"github.com/LDKhangg/go-playground/apps/task-manager/internal/tasks"
+	"github.com/LDKhangg/go-playground/apps/task-manager/internal/taskapp"
 )
 
 func serverAddress() string {
@@ -17,11 +17,11 @@ func serverAddress() string {
 	return ":8080"
 }
 
-func newMux(store *tasks.Store) *http.ServeMux {
+func newMux(service *taskapp.Service) *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", httpapi.HealthHandler)
-	mux.HandleFunc("/tasks", httpapi.TasksHandler(store))
-	mux.HandleFunc("/tasks/", httpapi.TaskByIDHandler(store))
+	mux.HandleFunc("/tasks", httpapi.TasksHandler(service))
+	mux.HandleFunc("/tasks/", httpapi.TaskByIDHandler(service))
 	return mux
 }
 

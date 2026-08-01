@@ -47,7 +47,7 @@ The capstone source is in [`apps/task-manager/`](apps/task-manager/).
 - [x] Add complete CRUD operations and domain validation.
 - [x] Expand handler coverage with `httptest`.
 - [x] Add `PORT` configuration and graceful HTTP shutdown.
-- [ ] Propagate request contexts through longer-running application work.
+- [x] Propagate request contexts through longer-running application work.
 
 Run and verify the current milestone:
 
@@ -55,6 +55,7 @@ Run and verify the current milestone:
 make run-api
 curl http://localhost:8080/health
 curl http://localhost:8080/tasks
+curl http://localhost:8080/tasks?delay=250ms
 curl -X PATCH http://localhost:8080/tasks/1 -H 'Content-Type: application/json' -d '{"done":true}'
 ```
 

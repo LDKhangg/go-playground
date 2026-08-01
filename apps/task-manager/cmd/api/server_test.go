@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/LDKhangg/go-playground/apps/task-manager/internal/taskapp"
 	"github.com/LDKhangg/go-playground/apps/task-manager/internal/tasks"
 )
 
@@ -31,7 +32,7 @@ func TestNewMuxRegistersCollectionAndItemRoutes(t *testing.T) {
 		t.Fatalf("Add returned error: %v", err)
 	}
 
-	handler := newMux(store)
+	handler := newMux(taskapp.NewService(store))
 
 	listRequest := httptest.NewRequest(http.MethodGet, "/tasks", nil)
 	listRecorder := httptest.NewRecorder()
