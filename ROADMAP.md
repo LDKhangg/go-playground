@@ -5,7 +5,7 @@ then applies that idea in a program that becomes progressively more realistic.
 
 ## Phase 1: Foundations And Exercises
 
-- [ ] 01 Basics: variables, constants, types, conditions, and loops.
+- [x] 01 Basics: variables, constants, types, conditions, and loops.
 - [ ] 02 Functions: parameters, multiple returns, scope, and basic pointers.
 - [ ] 03 Collections: arrays, slices, maps, `range`, and safe copies.
 - [ ] 04 Structs and methods: custom types, constructors, receivers, and composition.

@@ -7,5 +7,7 @@ type Profile struct {
 }
 
 func DefaultProfile() Profile {
-	panic("TODO")
+	DefaultProfile().Name = ""
+	DefaultProfile().Active = false
+	DefaultProfile().Attempts = 0
 }
