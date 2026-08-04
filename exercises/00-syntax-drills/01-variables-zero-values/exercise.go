@@ -7,7 +7,5 @@ type Profile struct {
 }
 
 func DefaultProfile() Profile {
-	DefaultProfile().Name = ""
-	DefaultProfile().Active = false
-	DefaultProfile().Attempts = 0
+	return Profile{}
 }
