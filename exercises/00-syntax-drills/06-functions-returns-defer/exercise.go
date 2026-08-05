@@ -1,7 +1,16 @@
 package functions
 
-import "io"
+import (
+	"io"
+)
 
 func ReadAndClose(rc io.ReadCloser) ([]byte, error) {
-	panic("TODO")
+	defer rc.Close()
+
+	data, err := io.ReadAll(rc)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }
