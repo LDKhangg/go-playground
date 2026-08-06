@@ -83,6 +83,7 @@ Implement `SumArray` by visiting every value in its `[4]int` argument. Implement
 Run:
 
 ```bash
+gofmt -w exercises/03-collections
 go test -tags exercise ./exercises/03-collections/...
 ```
 
