@@ -92,6 +92,7 @@ Make `NewTask` preserve the title, make `Complete` mutate the task, and make `Is
 Run:
 
 ```bash
+gofmt -w exercises/04-structs-methods
 go test -tags exercise ./exercises/04-structs-methods/...
 ```
 
