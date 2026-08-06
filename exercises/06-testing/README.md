@@ -90,6 +90,7 @@ In `exercise_test.go`, write `TestClassify` as a table with `negative`, `zero`, 
 Run:
 
 ```bash
+gofmt -w exercises/06-testing
 go test -tags exercise -cover ./exercises/06-testing/...
 go test -tags exercise -bench . ./exercises/06-testing/...
 ```
