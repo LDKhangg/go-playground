@@ -1,10 +1,22 @@
 package errvalues
 
-import "errors"
+import (
+	"errors"
+	"strings"
+)
 
-var ErrEmptyTitle = errors.New("empty title")
-var ErrTitleTooLong = errors.New("title too long")
+var (
+	ErrEmptyTitle   = errors.New("empty title")
+	ErrTitleTooLong = errors.New("title too long")
+)
 
 func ValidateTitle(title string) error {
-	panic("TODO")
+	trimmedStr := strings.TrimSpace(title)
+	if trimmedStr == "" {
+		return ErrEmptyTitle
+	}
+	if len(trimmedStr) > 80 {
+		return ErrTitleTooLong
+	}
+	return nil
 }
