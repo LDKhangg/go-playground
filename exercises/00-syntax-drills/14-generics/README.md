@@ -2,25 +2,18 @@
 
 ## Goal
 
-Reuse one algorithm across several comparable types.
+Write one algorithm that works across several types with type parameters.
 
-## Syntax
+## Concepts
 
-Type parameters and `comparable` constraints.
+- Type parameters `[T any]`
+- The `comparable` constraint
+- Type inference at call sites
+- Avoiding duplication without losing type safety
 
-## What It Does
+## Syntax Primer
 
-Checks whether a slice contains a target value.
-
-## Why It Matters
-
-Generics remove duplication without hiding behavior behind `interface{}`.
-
-## Mental Model
-
-The function is written once, then specialized by the compiler for each type use.
-
-## Annotated Example
+A generic function declares type parameters in brackets. The `comparable` constraint allows `==` and `!=` inside the body:
 
 ```go
 func Contains[T comparable](items []T, target T) bool {
@@ -33,27 +26,54 @@ func Contains[T comparable](items []T, target T) bool {
 }
 ```
 
-## Common Mistakes
+Callers never write the type argument explicitly: `Contains([]int{1, 2}, 2)` infers `T = int`, and `Contains([]string{"go"}, "go")` infers `T = string`.
 
-- Using generics when one concrete type would be simpler.
-- Choosing a constraint that is too broad or too narrow.
+## Mental Model
+
+The function is written once and specialized by the compiler for each type it is used with. `comparable` is a promise from the type to the function: "you may compare me with `==`." The result is one body, fully type-checked, with no `interface{}` casting at call sites.
+
+## Annotated Examples
+
+```go
+func IndexOf[T comparable](items []T, target T) int {
+	for i, item := range items {
+		if item == target {
+			return i
+		}
+	}
+	return -1
+}
+```
+
+## Common Diagnostics
+
+- `T does not implement comparable`: the constraint is missing or too weak; use `[T comparable]` when the body compares values.
+- `cannot compare T (missing comparable)`: comparing with `==` requires the `comparable` constraint.
+- `syntax error: unexpected [`: type parameters come immediately after the function name, before the parameter list.
 
 ## Exercise
 
-Implement `Contains`.
+Implement `Contains` so it reports whether a slice holds a target value.
 
 ## Acceptance Criteria
 
-- Works for `[]int`.
-- Works for `[]string`.
-- Returns false when missing.
+- Works for `[]int` (contains `2` in `[1 2 3]`).
+- Works for `[]string` (contains `"go"`).
+- Returns `false` when the target is missing.
+
+## Hints
+
+- Keep the `[T comparable]` signature from the starter.
+- Loop with `for _, item := range items` and compare `item == target`.
+- Return `true` on the first match and `false` after the loop.
 
 ## Verify
 
 ```bash
+gofmt -w exercises/00-syntax-drills/14-generics
 go test -tags exercise ./exercises/00-syntax-drills/14-generics/...
 ```
 
-## Reflection
+## Reflection Prompts
 
-When is a generic helper better than two copied functions?
+When is a generic helper better than two copied functions? Why is `comparable` needed instead of `any`?
