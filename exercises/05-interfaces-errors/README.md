@@ -84,6 +84,7 @@ Implement `ValidateTitle` by calling the supplied validator. Return `nil` on suc
 Run:
 
 ```bash
+gofmt -w exercises/05-interfaces-errors
 go test -tags exercise ./exercises/05-interfaces-errors/...
 ```
 
