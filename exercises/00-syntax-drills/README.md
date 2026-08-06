@@ -16,19 +16,19 @@ Each folder in `00-syntax-drills` focuses on a single skill:
 - functions, pointers, and `defer`
 - slices, maps, methods, interfaces, errors, generics, and JSON
 
-Every drill follows the same lesson format used elsewhere in the repository:
+Every drill follows the same lesson format used across the repository:
 
 1. Goal
-2. Syntax
-3. What it does
-4. Why it matters
-5. Mental model
-6. Annotated example
-7. Common mistakes
-8. Exercise
-9. Acceptance criteria
+2. Concepts
+3. Syntax Primer
+4. Mental Model
+5. Annotated Examples
+6. Common Diagnostics
+7. Exercise
+8. Acceptance Criteria
+9. Hints
 10. Verify
-11. Reflection
+11. Reflection Prompts
 
 ## Verify A Single Drill
 
