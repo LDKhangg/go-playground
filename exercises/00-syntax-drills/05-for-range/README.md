@@ -2,25 +2,19 @@
 
 ## Goal
 
-Use Go's one loop construct to process a collection.
+Use Go's single loop construct to process a collection and stop at a sentinel.
 
-## Syntax
+## Concepts
 
-`for`, `range`, `break`, and accumulation.
+- `for range` over a slice
+- The `_` index discard
+- Early `return` as a stop signal
+- Accumulator variables
+- Looping over an empty slice
 
-## What It Does
+## Syntax Primer
 
-Adds numbers until a sentinel value appears.
-
-## Why It Matters
-
-Many programs scan values until a stop condition or invalid state appears.
-
-## Mental Model
-
-`range` hands you each value in sequence; `break` stops the loop early.
-
-## Annotated Example
+Go has one loop keyword: `for`. The `range` form visits every element of a slice, exposing the index and the value:
 
 ```go
 total := 0
@@ -29,27 +23,62 @@ for _, value := range values {
 }
 ```
 
-## Common Mistakes
+A function can leave the loop early with `return`, which stops processing and hands control back with a result:
 
-- Forgetting to stop once the sentinel appears.
-- Reusing the wrong accumulator variable.
+```go
+for _, value := range values {
+	if value == stop {
+		return total
+	}
+}
+```
+
+## Mental Model
+
+`range` hands you each value in sequence; the loop body decides what to do with it. `return` is the loop's stop signal. Ranging over a `nil` slice is legal and simply visits zero elements, which makes loops naturally safe for empty input.
+
+## Annotated Examples
+
+```go
+func firstPositive(values []int) int {
+	for _, value := range values {
+		if value > 0 {
+			return value
+		}
+	}
+	return -1 // no positive value found
+}
+```
+
+## Common Diagnostics
+
+- `declared and not used: index`: use `_` for the index when you only need the value.
+- Wrong totals: resetting or misplacing the accumulator inside the loop so it is overwritten every iteration.
+- Sentinel not stopping the loop: forgetting to check for the stop condition inside the body.
 
 ## Exercise
 
-Implement `SumUntil`.
+Implement `SumUntil` so it adds values from the slice until it meets `stopAt`.
 
 ## Acceptance Criteria
 
-- Adds values before the sentinel.
-- Stops once `stopAt` appears.
-- Returns `0` for an empty slice.
+- Values before the sentinel are summed.
+- The loop stops when `stopAt` appears, and `stopAt` itself is not added.
+- An empty slice returns `0`.
+
+## Hints
+
+- Accumulate in a `total := 0` variable outside the loop.
+- Compare each value to `stopAt`; on a match return the current total immediately.
+- If the loop finishes without a match, return the total.
 
 ## Verify
 
 ```bash
+gofmt -w exercises/00-syntax-drills/05-for-range
 go test -tags exercise ./exercises/00-syntax-drills/05-for-range/...
 ```
 
-## Reflection
+## Reflection Prompts
 
-Why is a sentinel-based loop common in parser and stream code?
+Why is a sentinel-based loop common in parser and stream code? What should `SumUntil` return when `stopAt` is never found?
