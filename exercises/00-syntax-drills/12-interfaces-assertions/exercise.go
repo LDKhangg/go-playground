@@ -1,15 +1,20 @@
 package interfacesx
 
-import "io"
+import (
+	"fmt"
+	"io"
+)
 
 type Temporary interface {
 	Temporary() bool
 }
 
 func WriteGreeting(w io.Writer, name string) error {
-	panic("TODO")
+	_, err := fmt.Fprintf(w, "hello, %s", name)
+	return err
 }
 
 func AsTemporary(err error) (Temporary, bool) {
-	panic("TODO")
+	temp, ok := err.(Temporary)
+	return temp, ok
 }

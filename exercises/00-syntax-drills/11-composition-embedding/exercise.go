@@ -1,5 +1,7 @@
 package embedding
 
+import "fmt"
+
 type Task struct {
 	Title string
 }
@@ -14,5 +16,5 @@ type TimedTask struct {
 }
 
 func (t TimedTask) Label() string {
-	panic("TODO")
+	return fmt.Sprintf("%s due in %d", t.Title, t.DueInHours)
 }
