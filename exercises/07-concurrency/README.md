@@ -104,6 +104,7 @@ Make `Counter` safe while one goroutine increments it and another reads it. Both
 Run:
 
 ```bash
+gofmt -w exercises/07-concurrency
 go test -race -tags exercise ./exercises/07-concurrency/...
 ```
 
