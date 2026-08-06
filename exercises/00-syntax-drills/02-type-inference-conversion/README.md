@@ -2,54 +2,76 @@
 
 ## Goal
 
-Convert external string input into a typed Go value.
+Turn external string input into a typed Go value, and be explicit about conversions.
 
-## Syntax
+## Concepts
 
-`:=`, explicit conversion, and `strconv.Atoi`.
+- Type inference with `:=`
+- Explicit numeric conversions
+- `strconv.Atoi` for string-to-int parsing
+- The `(value, error)` return convention
 
-## What It Does
+## Syntax Primer
 
-Turns a string like `"8080"` into an integer port.
+`:=` infers the variable's type from the right-hand side. Go does not convert between types silently, so string-to-number parsing is an explicit operation that can fail.
 
-## Why It Matters
+```go
+raw := "8080"               // inferred string
+port, err := strconv.Atoi(raw)
+if err != nil {
+	return 0, err
+}
+```
 
-HTTP servers, config files, and CLI flags arrive as strings.
+When types differ, Go requires an explicit conversion: `int8(age)`, `float64(count)`. A `string` to an `int` is not a conversion but a parse, which is why `strconv.Atoi` returns an `error` as well as the value.
 
 ## Mental Model
 
-Go infers a type from the right-hand side, but conversions stay explicit.
+Go infers types but never guesses conversions. Text arriving from the outside world (config files, CLI flags, HTTP headers) is just bytes until you parse it; parsing produces a value and a possible error, and the error is part of the contract.
 
-## Annotated Example
+## Annotated Examples
 
 ```go
-raw := "8080"
-port, err := strconv.Atoi(raw)
-_ = port
-_ = err
+width := "1920"                 // string
+px, err := strconv.Atoi(width)  // px is an int
+if err != nil {
+	return err
+}
+_ = px
+
+size := float64(px) // explicit conversion to a new type
 ```
 
-## Common Mistakes
+## Common Diagnostics
 
-- Expecting Go to convert strings to ints automatically.
-- Ignoring the conversion error.
+- `cannot use raw (variable of type string) as int value in ...`: there is no implicit conversion; call `strconv.Atoi`.
+- `mismatched types int and string`: convert explicitly before combining.
+- `strconv.Atoi: parsing "abc": invalid syntax`: the returned error is information, not a crash — check it.
+- Ignoring the second return value hides parse failures.
 
 ## Exercise
 
-Implement `ParsePort`.
+Implement `ParsePort` so a valid numeric string becomes an `int`, and any invalid input produces an error.
 
 ## Acceptance Criteria
 
-- `"8080"` becomes `8080`.
-- Non-numeric input returns an error.
-- Negative values return an error.
+- `ParsePort("8080")` returns `(8080, nil)`.
+- Non-numeric input such as `"abc"` returns an error.
+- Negative values such as `"-1"` return an error.
+
+## Hints
+
+- Parse with `strconv.Atoi` and return `(0, err)` on failure.
+- Check the parsed value for `val < 0` and return a descriptive error.
+- Return the value and `nil` only at the end.
 
 ## Verify
 
 ```bash
+gofmt -w exercises/00-syntax-drills/02-type-inference-conversion
 go test -tags exercise ./exercises/00-syntax-drills/02-type-inference-conversion/...
 ```
 
-## Reflection
+## Reflection Prompts
 
-Why is explicit conversion safer than automatic conversion?
+Why is explicit conversion safer than automatic conversion? What would happen if `ParsePort` silently defaulted invalid input to `0`?
