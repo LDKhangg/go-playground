@@ -1,5 +1,10 @@
 package generics
 
 func Contains[T comparable](items []T, target T) bool {
-	panic("TODO")
+	for _, item := range items {
+		if item == target {
+			return true
+		}
+	}
+	return false
 }
