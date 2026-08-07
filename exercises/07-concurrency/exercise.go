@@ -1,17 +1,40 @@
 package concurrency
 
-import "context"
+import (
+	"context"
+	"sync"
+)
 
 type Counter struct {
 	value int
+	mu    sync.Mutex
 }
 
-func (c *Counter) Increment() {}
+func (c *Counter) Increment() {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	c.value++
+}
 
 func (c *Counter) Value() int {
-	return 0
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	return c.value
 }
 
 func Sum(ctx context.Context, values <-chan int) (int, error) {
-	return 0, nil
+	total := 0
+	for {
+		select {
+		case <-ctx.Done():
+			return 0, ctx.Err()
+
+		case val, ok := <-values:
+			if !ok {
+				return total, nil
+			}
+			total += val
+		}
+	}
 }
